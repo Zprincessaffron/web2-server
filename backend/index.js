@@ -15,7 +15,7 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const PORT = process.env.PORT;
 
-const allowedOrigins = ['http://localhost:5173'];
+const allowedOrigins = ['https://web2-client-eosin.vercel.app'];
 app.use(cors({
   origin: (origin, callback) => {
     if (allowedOrigins.includes(origin) || !origin) {
