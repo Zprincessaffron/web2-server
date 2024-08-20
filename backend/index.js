@@ -23,6 +23,8 @@ const corsOptions = {
   };
   
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Preflight OPTIONS request for all routes
+
 
 // middleware
 app.use(express.json())
@@ -89,7 +91,7 @@ app.get('/api/european-cuisine', async (req, res) => {
 
 app.get('/api/indian-cuisine', async (req, res) => {
   try {
-      const cuisineData = await IndianCuisine.find();
+      const cuisineData = await IndianCuisine.find().lean().exec(); // Optimize query
       if (!cuisineData.length) {
           return res.status(404).json({ message: 'No data found' });
       }
