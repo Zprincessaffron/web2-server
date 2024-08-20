@@ -37,6 +37,11 @@ mongoose.connect(process.env.mongoURI)
     .catch(err => console.log(err));
 
 // GET route to retrieve data from
+
+app.get("/test", (req, res) => {
+    res.json("Hello World");
+});
+
 app.get('/api/american-cuisine', async (req, res) => {
   try {
       const cuisineData = await AmericanCuisine.find();
