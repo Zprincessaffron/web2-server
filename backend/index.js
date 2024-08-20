@@ -19,7 +19,8 @@ const PORT = process.env.PORT;
 const corsOptions = {
     origin: 'https://web2-client-eosin.vercel.app',
     methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
+    allowedHeaders: ['Content-Type'],
+    credentials: true // Allow credentials
   };
   
 app.use(cors(corsOptions));
