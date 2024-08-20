@@ -15,17 +15,14 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const PORT = process.env.PORT;
 
-const allowedOrigins = ['https://web2-client-eosin.vercel.app'];
-app.use(cors({
-  origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true, // Enable credentials
-}));
+// const allowedOrigins = ['https://web2-client-eosin.vercel.app'];
+const corsOptions = {
+    origin: 'https://web2-client-eosin.vercel.app',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
+  };
+  
+app.use(cors(corsOptions));
 
 // middleware
 app.use(express.json())
