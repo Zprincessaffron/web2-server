@@ -25,7 +25,12 @@ const corsOptions = {
   
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Preflight OPTIONS request for all routes
-
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://web2-client-eosin.vercel.app');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+  });
+  
 
 // middleware
 app.use(express.json())
