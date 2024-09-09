@@ -158,20 +158,6 @@ app.post('/api/register', async (req, res) => {
             console.log(`OTP sent to ${email}`);
         }
 
-        // if (phone) {
-        //     const formattedPhone = formatPhoneNumber(phone);
-
-        //     if (!formattedPhone) {
-        //         return res.status(400).json({ message: 'Invalid phone number format.' });
-        //     }
-
-        //     const verification = await twilioClient.verify.v2.services(verifyServiceSid)
-        //         .verifications
-        //         .create({ to: formattedPhone, channel: 'sms' });
-
-        //     console.log(`OTP sent to ${phone}, SID: ${verification.sid}`);
-        // }
-
         // Return success response with user data (excluding the password)
         res.status(201).json({
             message: 'User registered successfully. OTP has been sent.',
@@ -256,19 +242,6 @@ app.post('/api/verify-otp', async (req, res) => {
                 text: messageContent,
             });
         }
-        // if (user.phone) {
-        //     const formattedPhone = formatPhoneNumber(user.phone);
-
-        //     if (!formattedPhone) {
-        //         return res.status(400).json({ message: 'Invalid phone number format.' });
-        //     }
-
-        //     await twilioClient.messages.create({
-        //         body: messageContent,
-        //         from: '',
-        //         to: formattedPhone,
-        //     });
-        // }
 
         // Return success response
         res.status(200).json({ message: 'OTP verified successfully! Unique ID has been sent to your email/phone.' });
@@ -277,8 +250,6 @@ app.post('/api/verify-otp', async (req, res) => {
         res.status(500).json({ message: 'Server error.' });
     }
 });
-
-
 
 
 // GET route to retrieve data from Database
