@@ -28,6 +28,7 @@ const app = express();
 const PORT = process.env.PORT;
 
 // const allowedOrigins = ['https://web2-client-eosin.vercel.app'];
+// http://localhost:5173
 const corsOptions = {
     origin: 'https://web2-client-eosin.vercel.app',
     methods: ['GET', 'POST'],
