@@ -11,7 +11,7 @@ const openai = new OpenAI({
 async function generateResponse(prompt) {
   try {
     const completion = await openai.chat.completions.create({
-      model: "meta/llama3-70b-instruct",
+      model: "meta/llama3-8b-instruct",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.7,
       top_p: 0.7,

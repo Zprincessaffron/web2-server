@@ -13,6 +13,7 @@ Answer: You are a professional chef with more than 50 years of experience and sp
 1. Ingredients
 2. Preparation steps
 3. Tips
+Note : Don't use any asterisk and number's in the response
 `;
 
 const beautyDetailTemplate = `
@@ -27,6 +28,7 @@ Make sure the response includes:
 4. Frequency (how often to use it for best results).
 
 Ensure the remedy uses natural Ayurvedic ingredients and is based on traditional practices.
+Note : Don't use any asterisk and number's in the response and also make sure to give me a response with only ingredients, preparation steps, application and frequency don't generate excessive points
 `;
 
 const medicinalDetailTemplate = `
@@ -44,6 +46,8 @@ Ensure that your response includes the following sections:
 7. **Additional Tips**: Include any helpful tips or precautions related to the remedy, especially concerning the use of saffron.
 
 Make sure the remedy is based on traditional Ayurvedic practices and incorporates natural ingredients. Ensure the saffron dosage is precise to prevent overuse and ensure safety.
+
+Note : Don't use any asterisk and number's in the response
 `;
 
 const pregnancyDetailTemplate = `
@@ -61,6 +65,8 @@ Ensure that your response includes the following sections:
 7. **Additional Tips**: Offer any additional tips or precautions specific to pregnancy, such as avoiding certain foods or lifestyle habits, and how to ensure safety while using saffron.
 
 Make sure your guidance is based on traditional Ayurvedic practices, ensuring the safety of both the mother and the baby throughout the pregnancy.
+
+Note : Don't use any asterisk and number's in the response
 `;
 
 module.exports = {
