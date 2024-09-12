@@ -42,7 +42,7 @@ const PORT = process.env.PORT;
 // const allowedOrigins = ['https://web2-client-eosin.vercel.app'];
 // http://localhost:5173
 const corsOptions = {
-    origin: 'https://web2-client-eosin.vercel.app',
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type'],
     credentials: true // Allow credentials
