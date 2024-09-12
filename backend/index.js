@@ -33,7 +33,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const TwilioAccountSid = process.env.accountSid;
 const TwilioAuthToken = process.env.authToken;
 
-const client = require('twilio')(TwilioAccountSid , TwilioAuthToken);
+const client = require('twilio')(process.env.accountSid , process.env.authToken);
 
 
 const app = express();
