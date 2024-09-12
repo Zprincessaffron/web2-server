@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Login to Docker Hub
-        run: echo "${{secrets.DOCKER_PASSWORD}}" | docker login -u "${{secrets.DOCKER_USERNAME}}" --password-stdin
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Docker Image
         run: docker build -t raja1111/web2-server:latest ./backend
@@ -31,11 +31,11 @@ jobs:
       - name: Run Docker Container
         run: |
           docker run -d -p 5000:5000 --name web2-server-container \
-            -e GOOGLE_API_KEY='${{secrets.GOOGLE_API_KEY}}' \
-            -e accountSid='${{secrets.accountSid}}' \
-            -e authToken='${{secrets.authToken}}' \
-            -e mongoURI='${{secrets.mongoURI}}' \
-            -e Web1_mongoURI='${{secrets.Web1_mongoURI}}' \
-            -e email='${{secrets.email}}' \
-            -e password='${{secrets.password}}' \
+            -e GOOGLE_API_KEY='${{ secrets.GOOGLE_API_KEY }}' \
+            -e accountSid='${{ secrets.accountSid }}' \
+            -e authToken='${{ secrets.authToken }}' \
+            -e mongoURI='${{ secrets.mongoURI }}' \
+            -e Web1_mongoURI='${{ secrets.Web1_mongoURI }}' \
+            -e email='${{ secrets.email }}' \
+            -e password='${{ secrets.password }}' \
             raja1111/web2-server:latest
