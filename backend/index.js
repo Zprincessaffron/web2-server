@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs'); 
+const axios = require("axios");
 const AmericanCuisine = require('./models/americanCuisine.js');
 const ArabianCuisine = require('./models/arabianCuisine.js');
 const AustralianCuisine = require('./models/australianCuisine.js');
@@ -22,6 +23,17 @@ const env = require('dotenv').config()
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const UserInteraction = require('./models/userInteraction.js');
+
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+const TwilioAccountSid = process.env.accountSid;
+const TwilioAuthToken = process.env.authToken;
+
+const client = require('twilio')(TwilioAccountSid , TwilioAuthToken);
 
 
 const app = express();
@@ -107,7 +119,6 @@ const formatPhoneNumber = (phoneNumber) => {
 };
 
 
-
 app.post('/api/register', async (req, res) => {
     const { name, email, phone, password, purchasedSite } = req.body;
 
@@ -157,6 +168,13 @@ app.post('/api/register', async (req, res) => {
                 text: `Your OTP code is ${otp}. It will expire in 15 minutes.`
             });
             console.log(`OTP sent to ${email}`);
+        } else if (phone) {
+            await client.messages.create({
+                body: `Your OTP code is ${otp}. It will expire in 15 minutes.`,
+                from: '+12565788545',
+                to: formatPhoneNumber(phone) 
+            });
+            console.log(`OTP sent to ${phone}`);
         }
 
         // Return success response with user data (excluding the password)
@@ -165,6 +183,7 @@ app.post('/api/register', async (req, res) => {
             userData: {
                 name: newUser.name,
                 email: newUser.email,
+                phone: newUser.phone,
                 purchasedSite: newUser.purchasedSite,
                 uniqueId: newUser.uniqueId
             }
@@ -175,7 +194,7 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-// Endpoint to verify uniqueId
+
 app.post('/api/verify-uniqueId', async (req, res) => {
     const { uniqueId } = req.body;
 
@@ -220,7 +239,7 @@ app.post('/api/verify-otp', async (req, res) => {
         const user = await User.findOne({ otp });
 
         if (!user) {
-            return res.status(404).json({ message: 'user not found.' });
+            return res.status(404).json({ message: 'User not found.' });
         }
 
         // Check if OTP is valid
@@ -235,6 +254,7 @@ app.post('/api/verify-otp', async (req, res) => {
 
         // Send the uniqueId to the user's email or phone
         const messageContent = `Your Unique ID is: ${user.uniqueId}`;
+
         if (user.email) {
             await transporter.sendMail({
                 from: process.env.email,
@@ -242,6 +262,13 @@ app.post('/api/verify-otp', async (req, res) => {
                 subject: 'Your Unique ID',
                 text: messageContent,
             });
+        } else if (user.phone) {
+            await client.messages.create({
+                body: messageContent,
+                from: '+12565788545',
+                to: formatPhoneNumber(user.phone) 
+            });
+            console.log(`Unique ID sent to ${user.phone}`);
         }
 
         // Return success response
@@ -384,6 +411,62 @@ app.get('/api/pregnantwomen', async (req, res) => {
         res.status(500).json({ message: 'Server Error', error });
     }
   });
+
+
+//   app.post('/ask-gpt', async (req, res) => {
+//     const { prompt } = req.body;
+  
+//     if (!prompt) {
+//       return res.status(400).json({ error: "Prompt is required" });
+//     }
+  
+//     try {
+//       const response = await axios.post(
+//         'https://api.openai.com/v1/chat/completions',
+//         {
+//           model: 'gpt-3.5-turbo',
+//           messages: [{ role: 'user', content: prompt }],
+//           max_tokens: 100,
+//         },
+//         {
+//           headers: {
+//             'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+//             'Content-Type': 'application/json',
+//           },
+//         }
+//       );
+  
+//       const gptResponse = response.data.choices[0].message.content;
+//       res.json({ response: gptResponse });
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ error: "Error interacting with GPT-3.5 Turbo" });
+//     }
+//   });
+  
+
+
+
+// Route to handle Generative AI requests
+
+
+app.post('/ask-gemini', async (req, res) => {
+  const { prompt } = req.body;
+
+  if (!prompt) {
+    return res.status(400).json({ error: "Prompt is required" });
+  }
+
+  try {
+    // Generate content using Google Generative AI
+    const result = await model.generateContent(prompt);
+    res.json({ response: result.response.text() });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error interacting with Gemini API" });
+  }
+});
+
 
 
 app.listen(PORT, () => {
