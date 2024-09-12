@@ -11,18 +11,31 @@ jobs:
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
-      - name: Login to docker hub
-        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Login to Docker Hub
+        run: echo "${{secrets.DOCKER_PASSWORD}}" | docker login -u "${{secrets.DOCKER_USERNAME}}" --password-stdin
+
       - name: Build Docker Image
-        run: docker build -t raja1111/web2-server ./backend
-      - name: Publish Image to docker hub
-        run: docker push raja1111/web2-server:latest  
+        run: docker build -t raja1111/web2-server:latest ./backend
+
+      - name: Publish Image to Docker Hub
+        run: docker push raja1111/web2-server:latest
         
   deploy:
     needs: build
     runs-on: self-hosted
-    steps: 
-      - name: Pull image from docker hub
+    steps:
+      - name: Pull image from Docker Hub
         run: docker pull raja1111/web2-server:latest
-      - name: Run Docker Container 
-        run: docker run -d -p 5000:5000 --name web2-server-container raja1111/web2-server
+
+      - name: Run Docker Container
+        run: |
+          docker run -d -p 5000:5000 --name web2-server-container \
+            -e GOOGLE_API_KEY='${{secrets.GOOGLE_API_KEY}}' \
+            -e accountSid='${{secrets.accountSid}}' \
+            -e authToken='${{secrets.authToken}}' \
+            -e mongoURI='${{secrets.mongoURI}}' \
+            -e Web1_mongoURI='${{secrets.Web1_mongoURI}}' \
+            -e email='${{secrets.email}}' \
+            -e password='${{secrets.password}}' \
+            raja1111/web2-server:latest
