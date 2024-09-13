@@ -26,10 +26,10 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Pull image from Docker Hub
-        run: docker pull raja1111/web2-server:latest
+        run: sudo docker pull raja1111/web2-server:latest
 
       - name: Delete old container
-        run: docker rm -f new-web2-server-container 
+        run: sudo docker rm -f new-web2-server-container 
 
       - name: Run Docker Container
         run: |
