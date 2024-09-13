@@ -35,7 +35,7 @@ const TwilioAuthToken = process.env.authToken;
 
 const client = require('twilio')(process.env.accountSid , process.env.authToken);
 
-console.log(process.env.accountSid , process.env.authToken);
+// console.log(process.env.accountSid , process.env.authToken);
 
 const app = express();
 const PORT = process.env.PORT;
