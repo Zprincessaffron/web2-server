@@ -30,12 +30,12 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-const TwilioAccountSid = process.env.accountSid;
-const TwilioAuthToken = process.env.authToken;
+const TwilioAccountSid = process.env.ACCOUNTSID;
+const TwilioAuthToken = process.env.AUTHTOKEN;
 
 const client = require('twilio')(TwilioAccountSid , TwilioAuthToken);
 
-// console.log(process.env.accountSid , process.env.authToken);
+// console.log(process.env.ACCOUNTSID , process.env.AUTHTOKEN);
 
 const app = express();
 const PORT = process.env.PORT;
@@ -59,12 +59,12 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({extended: false}));
 
-mongoose.connect(process.env.mongoURI)
+mongoose.connect(process.env.MONGOURI)
     .then(() => console.log('web-2 MongoDB connected'))
     .catch(err => console.log(err));
 
 // Second MongoDB connection using createConnection
-const web1DB = mongoose.createConnection(process.env.Web1_mongoURI, {
+const web1DB = mongoose.createConnection(process.env.WEB1_MONGOURI, {
     // useNewUrlParser: true,
     // useUnifiedTopology: true
 });
@@ -107,8 +107,8 @@ const User = web1DB.model('User', new mongoose.Schema({
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.email,
-        pass: process.env.password
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
     }
 });
 
@@ -258,7 +258,7 @@ app.post('/api/verify-otp', async (req, res) => {
 
         if (user.email) {
             await transporter.sendMail({
-                from: process.env.email,
+                from: process.env.Email,
                 to: user.email,
                 subject: 'Your Unique ID',
                 text: messageContent,

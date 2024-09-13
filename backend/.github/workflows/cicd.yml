@@ -32,10 +32,10 @@ jobs:
         run: |
           docker run -d -p 5000:5000 --name web2-server-container \
             -e GOOGLE_API_KEY='${{secrets.GOOGLE_API_KEY}}' \
-            -e accountSid='${{secrets.accountSid}}' \
-            -e authToken='${{secrets.authToken}}' \
-            -e mongoURI='${{secrets.mongoURI}}' \
-            -e Web1_mongoURI='${{secrets.Web1_mongoURI}}' \
+            -e ACCOUNTSID='${{secrets.ACCOUNTSID}}' \
+            -e AUTHTOKEN='${{secrets.AUTHTOKEN}}' \
+            -e MONGOURI='${{secrets.MONGOURI}}' \
+            -e WEB1_MONGOURI='${{secrets.WEB1_MONGOURI}}' \
             -e email='${{secrets.email}}' \
             -e password='${{secrets.password}}' \
             raja1111/web2-server:latest
