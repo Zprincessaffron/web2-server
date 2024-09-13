@@ -38,4 +38,4 @@ jobs:
             -e Web1_mongoURI='${{ secrets.Web1_mongoURI }}' \
             -e email='${{ secrets.email }}' \
             -e password='${{ secrets.password }}' \
-            raja1111/web2-server:latest
+            hrlk:latest
