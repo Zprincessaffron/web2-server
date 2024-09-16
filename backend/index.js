@@ -28,6 +28,9 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
+const app = express();
+const PORT = process.env.PORT;
+
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const TwilioAccountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -37,8 +40,7 @@ const client = require('twilio')(TwilioAccountSid , TwilioAuthToken);
 
 // console.log(process.env.ACCOUNTSID , process.env.AUTHTOKEN);
 
-const app = express();
-const PORT = process.env.PORT;
+
 
 // const allowedOrigins = ['https://web2-client-eosin.vercel.app'];
 // http://localhost:5173
