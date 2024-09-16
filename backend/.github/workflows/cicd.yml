@@ -32,8 +32,8 @@ jobs:
         run: |
           docker run -d -p 5000:5000 --name new-web2-server-container \
             -e GOOGLE_API_KEY='${{secrets.GOOGLE_API_KEY}}' \
-            -e ACCOUNTSID='${{secrets.ACCOUNTSID}}' \
-            -e AUTHTOKEN='${{secrets.AUTHTOKEN}}' \
+            -e ACCOUNTSID='${{secrets.TWILIO_ACCOUNT_SID}}' \
+            -e AUTHTOKEN='${{secrets.TWILIO_AUTH_TOKEN}}' \
             -e MONGOURI='${{secrets.MONGOURI}}' \
             -e WEB1_MONGOURI='${{secrets.WEB1_MONGOURI}}' \
             -e email='${{secrets.email}}' \
