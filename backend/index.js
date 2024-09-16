@@ -30,8 +30,8 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-const TwilioAccountSid = process.env.ACCOUNTSID;
-const TwilioAuthToken = process.env.AUTHTOKEN;
+const TwilioAccountSid = process.env.TWILIO_ACCOUNT_SID;
+const TwilioAuthToken = process.env.TWILIO_AUTH_TOKEN;
 
 const client = require('twilio')(TwilioAccountSid , TwilioAuthToken);
 
