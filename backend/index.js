@@ -99,7 +99,6 @@ const User = web1DB.model('User', new mongoose.Schema({
     purchasedSite: { type: String, required: true },
     uniqueId: { type: String, required: true, unique: true }, // Unique ID to be generated
     otp: { type: String }, // Store OTP if needed
-    phOtp : { type: String },
     otpExpires: { type: Date }, // Store OTP expiration time
 }));
 
@@ -130,9 +129,17 @@ app.post('/api/register', async (req, res) => {
         return res.status(400).json({ message: 'Name, password, and purchased site are required.' });
     }
 
+    // Ensure phone is not an empty string if it’s provided
+    const formattedPhone = phone ? phone.trim() : null;
+
     try {
-        // Check if the email or phone is already registered
-        const existingUser = await User.findOne({ $or: [{ email }, { phone }] });
+        // Build the query dynamically
+        const query = { $or: [{ email: email.trim() }] };
+        if (formattedPhone) {
+            query.$or.push({ phone: formattedPhone });
+        }
+
+        const existingUser = await User.findOne(query);
         if (existingUser) {
             return res.status(400).json({ message: 'Email or phone number already registered.' });
         }
@@ -151,7 +158,7 @@ app.post('/api/register', async (req, res) => {
         const newUser = new User({
             name,
             email,
-            phone,
+            phone: formattedPhone,
             password: hashedPassword,
             purchasedSite,
             uniqueId,
@@ -170,14 +177,12 @@ app.post('/api/register', async (req, res) => {
                 subject: 'Your OTP Code',
                 text: `Your OTP code is ${otp}. It will expire in 15 minutes.`
             });
-            console.log(`OTP sent to ${email}`);
-        } else if (phone) {
+        } else if (formattedPhone) {
             await client.messages.create({
                 body: `Your OTP code is ${otp}. It will expire in 15 minutes.`,
                 from: '+12565788545',
-                to: formatPhoneNumber(phone) 
+                to: formatPhoneNumber(formattedPhone)
             });
-            console.log(`OTP sent to ${phone}`);
         }
 
         // Return success response with user data (excluding the password)
@@ -196,6 +201,8 @@ app.post('/api/register', async (req, res) => {
         res.status(500).json({ message: 'Server error.' });
     }
 });
+
+
 
 
 app.post('/api/verify-uniqueId', async (req, res) => {
