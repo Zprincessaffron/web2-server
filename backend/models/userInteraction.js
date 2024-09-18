@@ -4,7 +4,6 @@ const userInteractionSchema = new mongoose.Schema({
   userId: {
     type: String,
     ref: 'User', // Assuming you have a User model
-    required: true,
   },
   recipeId: {
     type: mongoose.Schema.Types.ObjectId,
