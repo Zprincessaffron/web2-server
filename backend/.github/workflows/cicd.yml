@@ -30,7 +30,7 @@ jobs:
 
       - name: Run Docker Container
         run: |
-          docker run -d -p 6000:6000 --name new-web2-server-container \
+          docker run -d -p 8080:8080 --name new-web2-server-container \
             -e GOOGLE_API_KEY='${{secrets.GOOGLE_API_KEY}}' \
             -e ACCOUNTSID='${{secrets.TWILIO_ACCOUNT_SID}}' \
             -e AUTHTOKEN='${{secrets.TWILIO_AUTH_TOKEN}}' \
