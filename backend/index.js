@@ -94,12 +94,101 @@ const User = web1DB.model(
     email: { type: String, unique: true, sparse: true },
     phone: { type: String, unique: true, sparse: true },
     password: { type: String, required: true },
-    purchasedSite: { type: String, required: true },
+    purchasedSite: { type: String },
+    credits: {
+      type: Number,
+      default: 0,
+    },
+    hasReceivedInitialCredits: {
+      type: Boolean,
+      default: false,  // New users haven't received their initial credits
+    },
     uniqueId: { type: String, required: true, unique: true },
     otp: { type: String },
     otpExpires: { type: Date },
   })
 );
+
+// Demo User verification route
+app.get('/api/verify-user/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Find user by userId
+    const user = await User.findById(userId);
+    
+    if (user) {
+      if (!user.hasReceivedInitialCredits) {
+        // Set credits to 3 and mark as received
+        user.credits = 3;
+        user.hasReceivedInitialCredits = true;
+        await user.save();
+
+        return res.status(200).json({ 
+          valid: true, 
+          message: 'Valid user, credits granted', 
+          credits: user.credits 
+        });
+      } else {
+        // User has already received credits
+        return res.status(200).json({
+          valid: true, 
+          message: 'User already received initial credits', 
+          credits: user.credits 
+        });
+      }
+    } else {
+      return res.status(404).json({ valid: false, message: 'User not found' });
+    }
+  } catch (error) {
+    return res.status(500).json({ valid: false, message: 'Server error', error });
+  }
+});
+
+
+// Route to get Demo user credits
+app.get('/api/user-credits/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+
+    if (user) {
+      return res.status(200).json({ credits: user.credits });
+    } else {
+      return res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error', error });
+  }
+});
+
+// Route to update Demo user credits
+app.post('/api/update-credits', async (req, res) => {
+  try {
+    const { userId, credits } = req.body;
+
+    if (!userId || credits === undefined) {
+      return res.status(400).json({ message: 'Missing required fields: userId or credits' });
+    }
+
+    // Find the user by their unique ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update the user's credits
+    user.credits = credits;
+    await user.save();
+
+    return res.status(200).json({ message: 'Credits updated successfully', updatedCredits: user.credits });
+  } catch (error) {
+    console.error('Error updating credits:', error);
+    return res.status(500).json({ message: 'An error occurred while updating credits', error: error.message });
+  }
+});
+
 
 
 // Initialize Nodemailer transporter

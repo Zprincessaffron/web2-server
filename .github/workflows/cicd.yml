@@ -16,7 +16,7 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Docker Image
-        run: docker build -t raja1111/web2-server:latest ./backend
+        run: docker build -t raja1111/web2-server ./backend
 
       - name: Publish Image to Docker Hub
         run: docker push raja1111/web2-server:latest
@@ -26,11 +26,11 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Pull image from Docker Hub
-        run: sudo docker pull raja1111/web2-server:latest
+        run:  docker pull raja1111/web2-server:latest
 
       - name: Delete old container
-        run: sudo docker rm -f new-web2-server-container 
+        run:  docker rm -f web2-server-container 
 
       - name: Run Docker Container
         run: |
-          sudo docker run -d -p 5000:5000 --name new-web2-server-container GOOGLE_API_KEY='${{secrets.GOOGLE_API_KEY}}' ACCOUNTSID='${{secrets.ACCOUNTSID}}' AUTHTOKEN='${{secrets.AUTHTOKEN}}' MONGOURI='${{secrets.MONGOURI}}' WEB1_MONGOURI='${{secrets.WEB1_MONGOURI}}' EMAIL='${{secrets.EMAIL}}' PASSWORD='${{secrets.PASSWORD}}' raja1111/web2-server:latest
+              docker run -d -p 5000:5000 --name web2-server-container -e GOOGLE_API_KEY='${{secrets.GOOGLE_API_KEY}}' TWILIO_ACCOUNT_SID='${{secrets.TWILIO_ACCOUNT_SID}}' TWILIO_AUTH_TOKEN='${{secrets.TWILIO_AUTH_TOKEN}}' MONGOURI='${{secrets.MONGOURI}}' WEB1_MONGOURI='${{secrets.WEB1_MONGOURI}}' EMAIL='${{secrets.EMAIL}}' PASSWORD='${{secrets.PASSWORD}}' raja1111/web2-server
