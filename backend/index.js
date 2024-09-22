@@ -100,6 +100,10 @@ const User = web1DB.model(
       type: Boolean,
       default: false,  // New users haven't received their initial credits
     },
+    isDemoUser: {
+      type: Boolean,
+      default: false,
+    },
     uniqueId: { type: String, required: true, unique: true },
     otp: { type: String },
     otpExpires: { type: Date },
@@ -119,6 +123,7 @@ app.get('/api/verify-user/:userId', async (req, res) => {
         // Set credits to 3 and mark as received
         user.credits = 3;
         user.hasReceivedInitialCredits = true;
+        user.isDemoUser = true;
         await user.save();
 
         return res.status(200).json({ 
@@ -144,22 +149,6 @@ app.get('/api/verify-user/:userId', async (req, res) => {
 
 
 // Route to get Demo user credits
-app.get('/api/user-credits/:userId', async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const user = await User.findById(userId);
-
-    if (user) {
-      return res.status(200).json({ credits: user.credits });
-    } else {
-      return res.status(404).json({ message: 'User not found' });
-    }
-  } catch (error) {
-    return res.status(500).json({ message: 'Server error', error });
-  }
-});
-
-// Route to update Demo user credits
 app.post('/api/update-credits', async (req, res) => {
   try {
     const { userId, credits } = req.body;
@@ -175,7 +164,12 @@ app.post('/api/update-credits', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Update the user's credits
+    // Check if the user is a demo user
+    if (!user.isDemoUser) {
+      return res.status(403).json({ message: 'Credit update is only allowed for demo users' });
+    }
+
+    // Update the demo user's credits
     user.credits = credits;
     await user.save();
 
@@ -185,7 +179,6 @@ app.post('/api/update-credits', async (req, res) => {
     return res.status(500).json({ message: 'An error occurred while updating credits', error: error.message });
   }
 });
-
 
 
 // Initialize Nodemailer transporter
