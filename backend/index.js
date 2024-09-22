@@ -38,12 +38,9 @@ const TwilioAuthToken = process.env.TWILIO_AUTH_TOKEN;
 
 const client = require("twilio")(TwilioAccountSid, TwilioAuthToken);
 
-// console.log(process.env.ACCOUNTSID , process.env.AUTHTOKEN);
 
-// const allowedOrigins = ['https://web2-client-eosin.vercel.app'];
-// http://localhost:5173
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "http://3.91.104.175:5173",
   methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type"],
   credentials: true, // Allow credentials
